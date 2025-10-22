@@ -7,7 +7,7 @@ PV217 SOA Course Team Project - Masaryk University, Fall 2025
 Personal finance tracking platform built with microservices architecture. Users can set budgets, record transactions, and monitor spending in real-time.
 
 ### 🛠️ Team
-|Hyunsoo KIm</br>[@maeng-kim](https://github.com/@maeng-kim)|Lucia</br>[@moserl](https://github.com/moserl)|
+|Hyunsoo KIm</br>[@maeng-kim](https://github.com/@maeng-kim)|Lucia Moser</br>[@moserl](https://github.com/moserl)|
 |:---:|:---:|
 |`User Service`</br>`Infra`|`Buget Service`</br>`Transaction Service`|
 ### Course
