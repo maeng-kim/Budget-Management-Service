@@ -1,0 +1,41 @@
+services:
+  user-db:
+    image: postgres:16
+    container_name: user-db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-data:/var/lib/postgresql/data
+
+  budget-db:
+    image: postgres:16
+    container_name: budget-db
+    environment:
+      POSTGRES_DB: budgetdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - budget-data:/var/lib/postgresql/data
+
+  transaction-db:
+    image: postgres:16
+    container_name: transaction-db
+    environment:
+      POSTGRES_DB: transactiondb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - transaction-data:/var/lib/postgresql/data
+
+volumes:
+  user-data:
+  budget-data:
+  transaction-data:
