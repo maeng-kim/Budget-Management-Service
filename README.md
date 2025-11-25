@@ -9,7 +9,7 @@ Personal finance tracking platform built with microservices architecture. Users 
 ### 🛠️ Team
 |Hyunsoo KIm</br>[@maeng-kim](https://github.com/@maeng-kim)|Lucia Moser</br>[@moserl](https://github.com/moserl)|
 |:---:|:---:|
-|`User Service`</br>`Infra`|`Buget Service`</br>`Transaction Service`|
+|`User Service`</br>`Infra`|`Budget Service`</br>`Transaction Service`|
 ### Course
 PV217 Service Oriented Architecture
 ### Year
