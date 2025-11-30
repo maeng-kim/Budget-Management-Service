@@ -76,11 +76,11 @@ public class User extends PanacheEntityBase {
     }
 
     public static User findByEmail(String email) {
-        return find("email", email).firstResult();
+        return find("email.value", email).firstResult();
     }
 
     public static boolean existsByEmail(String email) {
-        return count("email", email) > 0;
+        return count("email.value", email) > 0;
     }
 
     public String getId() {

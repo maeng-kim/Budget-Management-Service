@@ -2,7 +2,6 @@ package com.budget.domain;
 
 import jakarta.persistence.Embeddable;
 
-import java.util.Locale;
 import  java.util.Objects;
 import  java.util.regex.Pattern;
 
