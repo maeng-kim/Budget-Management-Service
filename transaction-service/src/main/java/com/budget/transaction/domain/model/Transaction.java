@@ -1,27 +1,57 @@
 package com.budget.transaction.domain.model;
 
 import com.budget.transaction.domain.enums.TransactionType;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Transaction {
-
+@Entity
+@Table(name = "transactions")
+public class Transaction extends PanacheEntityBase {
+    @Id
+    @GeneratedValue
+    @Column(columnDefinition = "uuid")
     private UUID id;
+
+    @Column(name = "user_id", nullable = false, columnDefinition = "uuid")
     private UUID userId;
+
+    @Column(name = "budget_id", nullable = false, columnDefinition = "uuid")
     private UUID budgetId;
-    private Money amount;
-    private String category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType type;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "amount", column = @Column(name = "amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "currency"))
+    })
+    private Money amount;
+
+    @Column(nullable = false, length = 50)
+    private String category;
+
+    @Column(length = 255)
     private String description;
+
+    @Column(name = "transaction_date", nullable = false)
     private LocalDate date;
 
-    public Transaction(UUID id, UUID userId, UUID budgetId, Money amount, String category, TransactionType type, String description, LocalDate date) {
-        this.id = id;
+    protected Transaction() {
+    }
+
+    public Transaction(UUID userId, UUID budgetId, TransactionType type, Money amount, String category,
+            String description, LocalDate date) {
+
         this.userId = userId;
         this.budgetId = budgetId;
+        this.type = type;
         this.amount = amount;
         this.category = category;
-        this.type = type;
         this.description = description;
         this.date = date;
     }

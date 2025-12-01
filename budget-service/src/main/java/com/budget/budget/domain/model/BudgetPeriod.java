@@ -1,14 +1,22 @@
 package com.budget.budget.domain.model;
 
 import com.budget.budget.domain.enums.PeriodType;
-
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import java.time.LocalDate;
 
+@Embeddable
 public class BudgetPeriod {
 
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @Enumerated(EnumType.STRING)
     private PeriodType periodType;
+
+    protected BudgetPeriod() {
+    }
 
     public BudgetPeriod(LocalDate startDate, LocalDate endDate, PeriodType periodType) {
         if (startDate == null || endDate == null || periodType == null) {
@@ -33,5 +41,5 @@ public class BudgetPeriod {
     public PeriodType getPeriodType() {
         return periodType;
     }
-    
+
 }
