@@ -3,3 +3,16 @@
 !target/*-runner.jar
 !target/lib/*
 !target/quarkus-app/*
+
+target/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+.git/
+.gitignore
+README.md
