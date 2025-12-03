@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Path("/api/users")
 @Produces(MediaType.APPLICATION_JSON)
@@ -102,7 +103,7 @@ public class UserResource {
     }
 
     public static class UserResponse {
-        public String id;
+        public UUID id;
         public String email;
         public String fullName;
         public String currency;

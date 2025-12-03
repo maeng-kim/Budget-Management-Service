@@ -12,7 +12,9 @@ import java.util.UUID;
 public class User extends PanacheEntityBase {
 
     @Id
-    private String id;
+    @GeneratedValue
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email", unique = true, nullable = false))
@@ -28,7 +30,7 @@ public class User extends PanacheEntityBase {
     private String fullName;
 
     @Column(name = "currency", nullable = false)
-    private String currency = "Euro";
+    private String currency = "EUR";
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -39,7 +41,6 @@ public class User extends PanacheEntityBase {
 
         String[] saltAndHash = PasswordUtil.hashWithNewSalt(rawPassword);
 
-        this.id = UUID.randomUUID().toString();
         this.email = email;
         this.passwordSalt = saltAndHash[0];
         this.passwordHash = saltAndHash[1];
@@ -83,7 +84,7 @@ public class User extends PanacheEntityBase {
         return count("email.value", email) > 0;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

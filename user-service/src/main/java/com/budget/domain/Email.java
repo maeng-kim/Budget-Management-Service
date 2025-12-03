@@ -18,7 +18,7 @@ public class Email {
 
     public Email(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("Emial cannot be empty");
+            throw new IllegalArgumentException("Email cannot be empty");
         }
         if(!isValid(value)) {
             throw new IllegalArgumentException("Invalid email format: " + value);
