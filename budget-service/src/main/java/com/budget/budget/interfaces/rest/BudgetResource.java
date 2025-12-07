@@ -16,6 +16,7 @@ import com.budget.budget.interfaces.dto.BudgetRequest;
 import com.budget.budget.interfaces.dto.BudgetResponse;
 import com.budget.budget.interfaces.dto.BudgetStatusResponse;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -33,7 +34,8 @@ import jakarta.ws.rs.core.MediaType;
 
 @Path("/api/budgets")
 @Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)   
+@Produces(MediaType.APPLICATION_JSON)  
+@RolesAllowed({"User"}) 
 public class BudgetResource {
 
     @Inject

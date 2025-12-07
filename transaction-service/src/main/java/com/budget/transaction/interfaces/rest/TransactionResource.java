@@ -13,6 +13,7 @@ import com.budget.transaction.interfaces.dto.TransactionRequest;
 import com.budget.transaction.interfaces.dto.TransactionResponse;
 import com.budget.transaction.interfaces.dto.TransactionSummaryResponse;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/api/transactions")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"User"})
 public class TransactionResource {
     @Inject
     TransactionRepository transactionRepository;
@@ -63,7 +65,16 @@ public class TransactionResource {
             @QueryParam("userId") UUID userId,
             @QueryParam("budgetId") UUID budgetId) {
 
-        List<Transaction> transactions = transactionRepository.findByUserIdAndBudgetId(userId, budgetId);
+        List<Transaction> transactions;
+        if (userId != null && budgetId != null) {
+            transactions = transactionRepository.findByUserIdAndBudgetId(userId, budgetId);
+        } else if (userId != null) {
+            transactions = transactionRepository.findByUserId(userId);
+        } else if (budgetId != null) {
+            transactions = transactionRepository.findByBudgetId(budgetId);
+        } else {
+            transactions = transactionRepository.listAll();
+        }
         return transactions.stream()
                 .map(TransactionResponse::fromEntity)
                 .collect(Collectors.toList());

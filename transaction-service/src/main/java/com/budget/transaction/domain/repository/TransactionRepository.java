@@ -21,15 +21,7 @@ public class TransactionRepository implements PanacheRepositoryBase<Transaction,
     }
 
     public List<Transaction> findByUserIdAndBudgetId(UUID userId, UUID budgetId) {
-        if(userId != null && budgetId != null) {
-            return list("userId = ?1 and budgetId = ?2", userId, budgetId);
-        } else if(userId != null) {
-            return findByUserId(userId);
-        } else if(budgetId != null) {
-            return findByBudgetId(budgetId);
-        } else {
-            return listAll();
-        }
+        return list("userId = ?1 and budgetId = ?2", userId, budgetId);
     }
 
     public List<Transaction> findByUserIdAndDateRange(UUID userId, LocalDate startDate, LocalDate endDate) {
