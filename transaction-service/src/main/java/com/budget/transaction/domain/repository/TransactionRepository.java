@@ -43,5 +43,5 @@ public class TransactionRepository implements PanacheRepositoryBase<Transaction,
     public List<Transaction> findByUserIdAndTypeAndDate(UUID userId, String type, LocalDate date) {
         return list("userId = ?1 and type = ?2 and date = ?3", userId, type, date);
     }
-    
+
 }

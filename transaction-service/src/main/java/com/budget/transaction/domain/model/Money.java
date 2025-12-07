@@ -9,7 +9,7 @@ public class Money {
     private BigDecimal amount;
     private String currency;
 
-    protected Money() {
+    public Money() {
     }
 
     public Money(BigDecimal amount, String currency) {
@@ -53,5 +53,12 @@ public class Money {
     @Override
     public int hashCode() {
         return Objects.hash(amount, currency);
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

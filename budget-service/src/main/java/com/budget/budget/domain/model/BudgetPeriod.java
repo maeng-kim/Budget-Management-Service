@@ -15,7 +15,7 @@ public class BudgetPeriod {
     @Enumerated(EnumType.STRING)
     private PeriodType periodType;
 
-    protected BudgetPeriod() {
+    public BudgetPeriod() {
     }
 
     public BudgetPeriod(LocalDate startDate, LocalDate endDate, PeriodType periodType) {
@@ -41,5 +41,14 @@ public class BudgetPeriod {
     public PeriodType getPeriodType() {
         return periodType;
     }
-
+    
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }   
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }   
+    public void setPeriodType(PeriodType periodType) {
+        this.periodType = periodType;
+    }
 }

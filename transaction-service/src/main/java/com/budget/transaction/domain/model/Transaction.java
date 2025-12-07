@@ -41,7 +41,7 @@ public class Transaction extends PanacheEntityBase {
     @Column(name = "transaction_date", nullable = false)
     private LocalDate date;
 
-    protected Transaction() {
+    public Transaction() {
     }
 
     public Transaction(UUID userId, UUID budgetId, TransactionType type, Money amount, String category,
@@ -86,5 +86,30 @@ public class Transaction extends PanacheEntityBase {
 
     public LocalDate getDate() {
         return date;
+    }
+    // setters
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+    public void setBudgetId(UUID budgetId) {
+        this.budgetId = budgetId;
+    }
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+    public void setAmount(Money amount) {
+        this.amount = amount;
+    }           
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setDate(LocalDate date) {
+        this.date = date;   
     }
 }
