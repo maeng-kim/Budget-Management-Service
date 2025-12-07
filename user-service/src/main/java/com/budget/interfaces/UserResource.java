@@ -2,12 +2,21 @@ package com.budget.interfaces;
 
 import com.budget.domain.Email;
 import com.budget.domain.User;
+import com.budget.infrastructure.security.TokenService;
+import com.budget.interfaces.dto.request.*;
+import com.budget.interfaces.dto.response.*;
+
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,13 +26,21 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    @Inject
+    TokenService tokenService;
+
+    @ConfigProperty(name = "jwt.duration", defaultValue = "86400")
+    Long jwtDuration;
+
     @GET
+    @PermitAll
     public List<User> listUsers() {
         return User.listAll();
     }
 
     @POST
     @Transactional
+    @PermitAll
     public Response createUser(CreateUserRequest request) {
         if (request.email == null || request.email.isBlank()) {
             return Response.status(400).entity(Map.of("error", "Email is required")).build();
@@ -55,6 +72,7 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
+    @PermitAll
     public Response getUser(@PathParam("id") String id) {
         User user = User.findById(id);
         if (user == null) {
@@ -65,6 +83,7 @@ public class UserResource {
 
     @POST
     @Path("/login")
+    @PermitAll
     public Response login(LoginRequest request) {
 
         if (request.email == null || request.password == null) {
@@ -80,41 +99,81 @@ public class UserResource {
             return Response.status(401).entity(Map.of("error", "Invalid credentials")).build();
         }
 
-        // Return user info (TODO: Add JWT token later)
-        Map<String, Object> response = new HashMap<>();
-        response.put("userId", user.getId());
-        response.put("email", user.getEmail());
-        response.put("fullName", user.getFullName());
-        response.put("currency", user.getCurrency());
-        response.put("message", "Login successful");
+        String accessToken = tokenService.generateToken(
+                user.getId(),
+                user.getEmail().getValue(),
+                user.getFullName()
+        );
+
+        String refreshToken = tokenService.generateRefreshToken(
+                user.getId(),
+                user.getEmail().getValue()
+        );
+
+        LoginResponse response = new LoginResponse(
+                user.getId(),
+                user.getEmail().getValue(),
+                user.getFullName(),
+                user.getCurrency(),
+                accessToken,
+                refreshToken,
+                jwtDuration
+        );
 
         return Response.ok(response).build();
     }
 
-    public static class CreateUserRequest {
-        public String email;
-        public String password;
-        public String fullName;
+    @GET
+    @Path("/me")
+    @RolesAllowed("User")
+    public Response getCurrentUser(@Context SecurityContext ctx) {
+        String email = ctx.getUserPrincipal().getName();
+
+        User user = User.findByEmail(email);
+        if (user == null) {
+            return Response.status(404).entity(Map.of("error", "User not found")).build();
+        }
+
+        return Response.ok(new UserResponse(user)).build();
     }
 
-    public static class LoginRequest {
-        public String email;
-        public String password;
+    @PUT
+    @Path("/me")
+    @RolesAllowed("User")
+    @Transactional
+    public Response updateCurrentUser(@Context SecurityContext ctx, UpdateProfileRequest request) {
+        String email = ctx.getUserPrincipal().getName();
+
+        User user = User.findByEmail(email);
+        if (user == null) {
+            return Response.status(404).entity(Map.of("error", "User not found")).build();
+        }
+
+        user.updateProfile(request.fullName, request.currency);
+        user.persist();
+
+        return Response.ok(new UserResponse(user)).build();
     }
 
-    public static class UserResponse {
-        public UUID id;
-        public String email;
-        public String fullName;
-        public String currency;
-        public String createdAt;
+    @PUT
+    @Path("/me/password")
+    @RolesAllowed("User")
+    @Transactional
+    public Response changePassword(@Context SecurityContext ctx, ChangePasswordRequest request) {
+        String email = ctx.getUserPrincipal().getName();
 
-        public UserResponse(User user) {
-            this.id = user.getId();
-            this.email = user.getEmail().getValue();
-            this.fullName = user.getFullName();
-            this.currency = user.getCurrency();
-            this.createdAt = user.getCreatedAt().toString();
+        User user = User.findByEmail(email);
+        if (user == null) {
+            return Response.status(404).entity(Map.of("error", "User not found")).build();
+        }
+
+        try {
+            user.changePassword(request.currentPassword, request.newPassword);
+            user.persist();
+
+            return Response.ok(Map.of("message", "Password changed successfully")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(400).entity(Map.of("error", e.getMessage())).build();
         }
     }
 }
