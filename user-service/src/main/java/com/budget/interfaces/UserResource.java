@@ -33,9 +33,12 @@ public class UserResource {
     Long jwtDuration;
 
     @GET
-    @PermitAll
-    public List<User> listUsers() {
-        return User.listAll();
+    @RolesAllowed("User")
+    public List<UserResponse> listUsers() {
+        return User.<User>listAll()
+                .stream()
+                .map(UserResponse::new)
+                .toList();
     }
 
     @POST
