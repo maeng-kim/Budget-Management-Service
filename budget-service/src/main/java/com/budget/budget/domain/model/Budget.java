@@ -47,7 +47,7 @@ public class Budget extends PanacheEntityBase {
     })
     private BudgetPeriod period;
 
-    protected Budget() {
+    public Budget() {
     }
 
     public Budget(UUID userId, String category, Money limit, Money spent, BudgetStatus status,
@@ -114,5 +114,26 @@ public class Budget extends PanacheEntityBase {
     public LocalDate getEndDate() {
         return period != null ? period.getEndDate() : null;
     }
-
+    // setters
+    public void setId(UUID id) {
+        this.id = id;       
+    }   
+    public void setUserId(UUID userId) {
+        this.userId = userId;       
+    }       
+    public void setCategory(String category) {
+        this.category = category;       
+    }       
+    public void setLimit(Money limit) {
+        this.limit = limit;
+    }
+    public void setSpent(Money spent) {
+        this.spent = spent;
+    }
+    public void setStatus(BudgetStatus status) {
+        this.status = status;
+    }
+    public void setPeriod(BudgetPeriod period) {
+        this.period = period;
+    }
 }
