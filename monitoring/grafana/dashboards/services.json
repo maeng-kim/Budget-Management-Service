@@ -1,0 +1,13 @@
+{
+  "title": "Budget Management Services",
+  "panels": [
+    {
+      "id": 1,
+      "title": "HTTP Requests/sec",
+      "type": "graph",
+      "targets": [{
+        "expr": "rate(http_server_requests_seconds_count[1m])"
+      }]
+    }
+  ]
+}

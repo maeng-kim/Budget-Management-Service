@@ -43,3 +43,8 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+# pemkey
+*.pem
+src/main/resources/keys/publicKey.pem
+src/main/resources/keys/privateKey.pem
