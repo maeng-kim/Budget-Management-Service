@@ -97,7 +97,7 @@ DELETE /api/transactions/{id}
 3. The user sends a request to record the purchase of a coffee for €5 → POST /api/transactions with {"amount": 5, "category": "Drinks"}
 4. The Transaction service validates the request and saves the transaction into its Database.
 5. User checks budget service via GET /api/budgets/{id}/status.
-6. The Budget Service calculates how much has been spent for the Drinks category and returns updated values, including remaining budget and utilization percentage.
+6. The Budget Service calculates how much has been spent for the Drinks category.
 
 ```
 
