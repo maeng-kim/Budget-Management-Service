@@ -14,22 +14,38 @@ Personal finance tracking platform built with microservices architecture. Users 
 PV217 Service Oriented Architecture
 ### Year
 2025 Fall
+---
 
+## 📚 Description of the Project
+The Budget-Management-System Fintrack is a microservices-based application designed for personal finance tracking.
+Fintrack enables users to:
+- Register and authenticate using JWT
+- Create and manage budget categories
+- Record income and expenses
+- Monitor their personal spending
+- Track their remaining Budgets
+The system is divided into independent microservices, namely User, Budget and Transaction. Each of them is responsible for a separate domain and communicate through API. Furthermore, Prometheus collects health metrics from each service and Grafana visualizes data to monitor usage trends and system status. 
 ---
 
 ## 💭 Why Microservices?
-Traditional monolithic budget apps struggle with:
+Microservices solve several problems that arise in traditional monolithic applications:
+- Scalability: Each service can scale independently depending on load
+- Loose Coupling: Budget calculations and transaction recording are seperated, which reduces complexity.
+- Easier Collaboration: adding new features does not affect existing code
+- Better Fault Isolation: a failure in one service does not break the entire system
+---
 
-- Scaling issues during month-end when all users check statements
-- Tight coupling between transaction recording and budget calculation
-- Difficulty adding new features without affecting existing code
+## ⭐ Benefits of using Microservices in this Project
+- Seperation of concerns: User authentication is handled in User Service, Budget logic is isolated in Budget Service and financial entries/transactions are handled in Transaction Service.
+- Fault Tolerance: if the Transaction service fails, authentication will still work.
+- Event-Driven Updates: Budget updates happen automatically when Transactions arrive.
+- Improved Developer Productivity: Team members can work on different services independently, and there are no merge conflicts as in large monolithic projects.
+---
 
-Our solution:
-
-- Independent services that scale based on load
-- Async processing via Kafka prevents blocking
-- Each service deployable independently
-
+## ☔ Drawbacks of using Microservices 
+- Possibility of security risks as the services communicate through API gateways, which can expose them to threats.
+- Monitoring becomes more complex which requires usage of Prometheus and Grafana.
+- Data consistency challenges as there is not just one single Database.
 ---
 
 ## 👓 System Components
@@ -66,19 +82,20 @@ GET /api/transactions
 GET /api/transactions/summary
 DELETE /api/transactions/{id}
 ```
-**Tech :** Quarkus, PostgreSQL, Kafka Producer
+**Tech :** Quarkus, PostgreSQL, 
 
 ---
 
-## 💪 How It Works
-### Example Flow : User buys coffee for $5
+## 💪 Story/Scenario of Usage
+### Example Flow : User buys coffee for €5
 ```
-1. User → POST /api/transactions {"amount": 5, "category": "Food"}
-2. Transaction Service → Saves to DB
-3. Transaction Service → Publishes to Kafka topic
-4. Budget Service → Receives event
-5. Budget Service → Updates Food budget: spent += 5
-6. User → GET /api/budgets/1/status → See updated balance
+1. The User signs up and logs in to the application. Upon login, the User Service issues a JWT access token.
+2. User sets a monthly budget for Drinks with a limit of €50 → POST /api/budgets 
+3. The user sends a request to record the purchase of a coffee for €5 → POST /api/transactions with {"amount": 5, "category": "Drinks"}
+4. The Transaction service validates the request and saves the transaction into its Database.
+5. User checks budget service via GET /api/budgets/{id}/status.
+6. The Budget Service calculates how much has been spent for the Drinks category and returns updated values, including remaining budget and utilization percentage.
+
 ```
 
 ---
@@ -162,25 +179,9 @@ budget-management-system/
 - Services run independently in isolated containers
 - Docker Compose manages multi-container setup for local development
 
-### Kubernetes
-
-- Kubernetes orchestrates all microservices for production
-- Horizontal Pod Autoscaler (HPA) provides automatic scaling based on CPU usage
-- Self-healing through liveness and readiness probes
-- Load balancing across multiple pod replicas
-
-### CI/CD
-
-- Jenkins pipeline automates build, test, and deployment
-- Automated Docker image building on every commit
-- Integration with Docker registry for image storage
-- Continuous deployment to Kubernetes cluster via kubectl
-
 ---
 
 ## 📚 What We Learned
-- Kafka makes services truly independent
-- Kubernetes health checks are crucial for reliability
 - Panache drastically reduces boilerplate
 - JWT simplifies auth in distributed systems
 
@@ -188,4 +189,4 @@ budget-management-system/
 
 ## 🎯 Conclusion
 Budget Management System successfully implements microservices architecture for personal finance tracking. Users benefit from real-time spending visibility and instant budget alerts, enabling better financial control and preventing overspending.
-The project demonstrates key microservices principles: independent scaling via Kubernetes, loose coupling through Kafka events, and rapid development with Quarkus. While adding operational complexity, the architecture delivers tangible benefits in scalability, reliability, and maintainability.
+The project demonstrates key microservices principles: loose coupling, and rapid development with Quarkus. While adding operational complexity, the architecture delivers tangible benefits in scalability, reliability, and maintainability.
