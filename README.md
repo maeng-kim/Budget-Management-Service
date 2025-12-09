@@ -53,13 +53,16 @@ Microservices solve several problems that arise in traditional monolithic applic
 Handles authentication and user profiles.
 **Key Endpoints** <br/>
 ```
-POST /api/auth/signup
-POST /api/auth/login
+POST /api/users
+POST /api/users/login
+POST /api/users/User
+GET /api/users/{id}
 GET /api/users/me
 PUT /api/users/me
+PUT /api/users/me/password
 ```
 **Tech :**
-Quarkus, JWT, BCrypt, PostgreSQL
+Quarkus, JWT, PostgreSQL, Quarkus Panache
 
 ### Budget Service (port 8081)
 Manages budget goals and tracks usage.
@@ -71,7 +74,7 @@ GET /api/budgets/{id}/status
 PUT /api/budgets/{id}
 DELETE /api/budgets/{id}
 ```
-**Tech :** Quarkus Panache, PostgreSQL, Kafka Consumer
+**Tech :** Quarkus Panache, PostgreSQL
 
 ### Transaction Service (port 8082)
 Records income/expense entries.
@@ -82,7 +85,7 @@ GET /api/transactions
 GET /api/transactions/summary
 DELETE /api/transactions/{id}
 ```
-**Tech :** Quarkus, PostgreSQL, 
+**Tech :** Quarkus, PostgreSQL
 
 ---
 
@@ -94,6 +97,7 @@ DELETE /api/transactions/{id}
 3. The user sends a request to record the purchase of a coffee for €5 → POST /api/transactions with {"amount": 5, "category": "Drinks"}
 4. The Transaction service validates the request and saves the transaction into its Database.
 5. User checks budget service via GET /api/budgets/{id}/status.
+6. The Budget Service calculates how much has been spent for the Drinks category and returns updated values, including remaining budget and utilization percentage.
 
 ```
 
@@ -105,10 +109,8 @@ DELETE /api/transactions/{id}
 | Framework | Quarkus | 3.15.1 (LTS) | Fast startup, low memory, native compilation support |
 | Database | PostgreSQL | 16.6 | Latest stable, excellent JSON support, proven reliability |
 | ORM | Hibernate Panache | (Quarkus bundled) | Simplifies repository pattern, reduces boilerplate |
-| Messaging | Apache Kafka | 3.8.0 | Industry standard for event streaming |
 | Auth | JWT (SmallRye JWT) | 4.5.2 | Stateless authentication, microservices-friendly |
 | Container | Docker | 27.3.1 | Standard containerization platform |
-| Orchestration | Kubernetes | 1.31 | Auto-scaling, self-healing, load balancing |
 | Monitoring | Prometheus | 2.54.1 | Metrics collection and alerting |
 | Visualization | Grafana | 11.2.0 | Dashboard and data visualization |
 | API Docs | OpenAPI/Swagger | 3.1.0 | Interactive API documentation |
@@ -138,7 +140,6 @@ budget-management-system/
 │       └── service/        # Business logic
 ├── budget-service/
 ├── transaction-service/
-├── k8s/                    # Kubernetes configs
 ├── docker-compose.yml      # Local dev environment
 └── README.md
 ```
